@@ -267,7 +267,7 @@ where
 
 	let params = new_partial::<RuntimeApi, Executor, BIQ>(&parachain_config, build_import_queue)?;
 	let (
-		frontier_block_import,
+		_frontier_block_import,
 		mut telemetry,
 		telemetry_worker_handle,
 		pending_transactions,
