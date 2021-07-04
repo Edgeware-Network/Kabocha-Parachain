@@ -17,7 +17,7 @@
 use crate::util::*;
 use ethereum_types::{H160, U256};
 use evm::{Capture, ExitError, ExitReason, ExitSucceed};
-use hedgeware_rpc_primitives_debug::{
+use kabocha_rpc_primitives_debug::{
 	single::{Call, CallInner, TransactionTrace},
 	CallResult, CallType, CreateResult,
 };

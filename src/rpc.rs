@@ -19,7 +19,7 @@
 use std::{sync::Arc, time::Duration};
 
 use fp_rpc::EthereumRuntimeRPCApi;
-use hedgeware_rpc_primitives_debug::DebugRuntimeApi;
+use kabocha_rpc_primitives_debug::DebugRuntimeApi;
 use sp_block_builder::BlockBuilder;
 use tokio::sync::Semaphore;
 
@@ -34,13 +34,13 @@ use fc_rpc::{
 use fc_rpc_core::types::{FilterPool, PendingTransactions};
 use futures::StreamExt;
 use jsonrpc_pubsub::manager::SubscriptionManager;
-use hedgeware_parachain_primitives::{AccountId, Balance, Block, Hash, Index};
-use hedgeware_rpc_debug::DebugHandler;
-use hedgeware_rpc_debug::{Debug, DebugRequester, DebugServer};
-use hedgeware_rpc_trace::{
+use kabocha_parachain_primitives::{AccountId, Balance, Block, Hash, Index};
+use kabocha_rpc_debug::DebugHandler;
+use kabocha_rpc_debug::{Debug, DebugRequester, DebugServer};
+use kabocha_rpc_trace::{
 	CacheRequester as TraceFilterCacheRequester, CacheTask, Trace, TraceServer,
 };
-use hedgeware_rpc_txpool::{TxPool, TxPoolServer};
+use kabocha_rpc_txpool::{TxPool, TxPoolServer};
 use pallet_transaction_payment_rpc::{TransactionPayment, TransactionPaymentApi};
 use sc_client_api::{
 	backend::{AuxStore, Backend, StateBackend, StorageProvider},
@@ -76,8 +76,8 @@ pub trait RuntimeApiCollection:
 	+ sp_offchain::OffchainWorkerApi<Block>
 	+ sp_session::SessionKeys<Block>
 	+ fp_rpc::EthereumRuntimeRPCApi<Block>
-	+ hedgeware_rpc_primitives_debug::DebugRuntimeApi<Block>
-	+ hedgeware_rpc_primitives_txpool::TxPoolRuntimeApi<Block>
+	+ kabocha_rpc_primitives_debug::DebugRuntimeApi<Block>
+	+ kabocha_rpc_primitives_txpool::TxPoolRuntimeApi<Block>
 	+ cumulus_primitives_core::CollectCollationInfo<Block>
 where
 	<Self as sp_api::ApiExt<Block>>::StateBackend: sp_api::StateBackend<BlakeTwo256>,
@@ -95,8 +95,8 @@ where
 		+ sp_offchain::OffchainWorkerApi<Block>
 		+ sp_session::SessionKeys<Block>
 		+ fp_rpc::EthereumRuntimeRPCApi<Block>
-		+ hedgeware_rpc_primitives_debug::DebugRuntimeApi<Block>
-		+ hedgeware_rpc_primitives_txpool::TxPoolRuntimeApi<Block>
+		+ kabocha_rpc_primitives_debug::DebugRuntimeApi<Block>
+		+ kabocha_rpc_primitives_txpool::TxPoolRuntimeApi<Block>
 		+ cumulus_primitives_core::CollectCollationInfo<Block>,
 	<Self as sp_api::ApiExt<Block>>::StateBackend: sp_api::StateBackend<BlakeTwo256>,
 {
@@ -202,7 +202,7 @@ where
 	io.extend_with(EthApiServer::to_delegate(EthApi::new(
 		client.clone(),
 		pool.clone(),
-		hedgeware_parachain_runtime::TransactionConverter,
+		kabocha_parachain_runtime::TransactionConverter,
 		network.clone(),
 		pending_transactions,
 		signers,
@@ -269,7 +269,7 @@ pub struct SpawnTasksParams<'a, B: BlockT, C, BE> {
 	pub filter_pool: Option<FilterPool>,
 }
 
-/// Spawn the tasks that are required to run Hedgeware.
+/// Spawn the tasks that are required to run Kabocha.
 pub fn spawn_tasks<B, C, BE>(
 	rpc_config: &RpcConfig,
 	params: SpawnTasksParams<B, C, BE>,

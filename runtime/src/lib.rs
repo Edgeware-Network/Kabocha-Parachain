@@ -23,7 +23,7 @@
 include!(concat!(env!("OUT_DIR"), "/wasm_binary.rs"));
 
 use codec::{Encode, Decode};
-use hedgeware_parachain_primitives::*;
+use kabocha_parachain_primitives::*;
 use sp_api::impl_runtime_apis;
 use sp_core::{OpaqueMetadata, U256, H160, H256};
 use sp_runtime::{
@@ -97,7 +97,7 @@ use xcm_executor::{Config, XcmExecutor};
 use pallet_xcm::{XcmPassthrough, EnsureXcm, IsMajorityOfBody};
 use xcm::v0::Xcm;
 
-use hedgeware_rpc_primitives_txpool::TxPoolResponse;
+use kabocha_rpc_primitives_txpool::TxPoolResponse;
 
 pub type SessionHandlers = ();
 
@@ -109,8 +109,8 @@ impl_opaque_keys! {
 
 /// This runtime version.
 pub const VERSION: RuntimeVersion = RuntimeVersion {
-	spec_name: create_runtime_str!("hedgeware-parachain"),
-	impl_name: create_runtime_str!("hedgeware-parachain"),
+	spec_name: create_runtime_str!("kabocha-parachain"),
+	impl_name: create_runtime_str!("kabocha-parachain"),
 	authoring_version: 1,
 	spec_version: 18,
 	impl_version: 0,
@@ -593,6 +593,7 @@ parameter_types! {
 	pub const InstantAllowed: bool = true;
 	pub const MinimumDeposit: Balance = 100 * DOLLARS;
 	pub const EnactmentPeriod: BlockNumber = 30 * 24 * 60 * MINUTES;
+	pub const TreasuryProposalsEnactmentPeriod: BlockNumber = 1 * DAYS;
 	pub const CooloffPeriod: BlockNumber = 28 * 24 * 60 * MINUTES;
 	// One cent: $10,000 / MB
 	pub const PreimageByteDeposit: Balance = 1 * CENTS;
@@ -600,11 +601,19 @@ parameter_types! {
 	pub const MaxProposals: u32 = 100;
 }
 
-impl pallet_democracy::Config for Runtime {
+pub struct TreasuryProposalsHandle;
+impl pallet_democringey::ApprovingProposal for TreasuryProposalsHandle {
+	fn approve_proposal(proposal_id: pallet_democringey::PropIndex) -> Vec<u8> {
+		Call::Treasury(pallet_treasury::Call::approve_proposal(proposal_id)).encode()
+	}
+}
+
+impl pallet_democringey::Config for Runtime {
 	type Proposal = Call;
 	type Event = Event;
 	type Currency = Balances;
 	type EnactmentPeriod = EnactmentPeriod;
+	type TreasuryProposalsEnactmentPeriod = TreasuryProposalsEnactmentPeriod;
 	type LaunchPeriod = LaunchPeriod;
 	type VotingPeriod = VotingPeriod;
 	type MinimumDeposit = MinimumDeposit;
@@ -641,8 +650,9 @@ impl pallet_democracy::Config for Runtime {
 	type Scheduler = Scheduler;
 	type PalletsOrigin = OriginCaller;
 	type MaxVotes = MaxVotes;
-	type WeightInfo = pallet_democracy::weights::SubstrateWeight<Runtime>;
+	type WeightInfo = pallet_democringey::weights::SubstrateWeight<Runtime>;
 	type MaxProposals = MaxProposals;
+	type TreasuryProposals = TreasuryProposalsHandle;
 }
 
 parameter_types! {
@@ -980,7 +990,7 @@ impl webb_currencies::Config for Runtime {
 construct_runtime! {
 	pub enum Runtime where
 		Block = Block,
-		NodeBlock = hedgeware_parachain_primitives::Block,
+		NodeBlock = kabocha_parachain_primitives::Block,
 		UncheckedExtrinsic = UncheckedExtrinsic,
 	{
 		System: frame_system::{Pallet, Call, Storage, Config, Event<T>},
@@ -990,7 +1000,7 @@ construct_runtime! {
 		TransactionPayment: pallet_transaction_payment::{Pallet, Storage},
 		ParachainInfo: parachain_info::{Pallet, Storage, Config},
 
-		Democracy: pallet_democracy::{Pallet, Call, Storage, Config<T>, Event<T>},
+		Democracy: pallet_democringey::{Pallet, Call, Storage, Config<T>, Event<T>},
 		Council: pallet_collective::<Instance1>::{Pallet, Call, Storage, Origin<T>, Event<T>, Config<T>},
 		Elections: pallet_elections_phragmen::{Pallet, Call, Storage, Event<T>, Config<T>},
 		Treasury: pallet_treasury::{Pallet, Call, Storage, Config, Event<T>},
@@ -1034,11 +1044,11 @@ impl fp_rpc::ConvertTransaction<UncheckedExtrinsic> for TransactionConverter {
 		UncheckedExtrinsic::new_unsigned(pallet_ethereum::Call::<Runtime>::transact(transaction).into())
 	}
 }
-impl fp_rpc::ConvertTransaction<hedgeware_parachain_primitives::UncheckedExtrinsic> for TransactionConverter {
-	fn convert_transaction(&self, transaction: pallet_ethereum::Transaction) -> hedgeware_parachain_primitives::UncheckedExtrinsic {
+impl fp_rpc::ConvertTransaction<kabocha_parachain_primitives::UncheckedExtrinsic> for TransactionConverter {
+	fn convert_transaction(&self, transaction: pallet_ethereum::Transaction) -> kabocha_parachain_primitives::UncheckedExtrinsic {
 		let extrinsic = UncheckedExtrinsic::new_unsigned(pallet_ethereum::Call::<Runtime>::transact(transaction).into());
 		let encoded = extrinsic.encode();
-		hedgeware_parachain_primitives::UncheckedExtrinsic::decode(&mut &encoded[..]).expect("Encoded extrinsic is always valid")
+		kabocha_parachain_primitives::UncheckedExtrinsic::decode(&mut &encoded[..]).expect("Encoded extrinsic is always valid")
 	}
 }
 
@@ -1192,17 +1202,17 @@ impl_runtime_apis! {
 		}
 	}
 
-	impl hedgeware_rpc_primitives_debug::DebugRuntimeApi<Block> for Runtime {
+	impl kabocha_rpc_primitives_debug::DebugRuntimeApi<Block> for Runtime {
 		fn trace_transaction(
 			extrinsics: Vec<<Block as BlockT>::Extrinsic>,
 			transaction: &EthereumTransaction,
-			trace_type: hedgeware_rpc_primitives_debug::single::TraceType,
+			trace_type: kabocha_rpc_primitives_debug::single::TraceType,
 		) -> Result<
-			hedgeware_rpc_primitives_debug::single::TransactionTrace,
+			kabocha_rpc_primitives_debug::single::TransactionTrace,
 			sp_runtime::DispatchError
 		> {
-			use hedgeware_rpc_primitives_debug::single::TraceType;
-			use hedgeware_evm_tracer::{RawTracer, CallListTracer};
+			use kabocha_rpc_primitives_debug::single::TraceType;
+			use kabocha_evm_tracer::{RawTracer, CallListTracer};
 
 			// Apply the a subset of extrinsics: all the substrate-specific or ethereum transactions
 			// that preceded the requested transaction.
@@ -1250,11 +1260,11 @@ impl_runtime_apis! {
 			extrinsics: Vec<<Block as BlockT>::Extrinsic>,
 		) -> Result<
 			Vec<
-				hedgeware_rpc_primitives_debug::block::TransactionTrace>,
+				kabocha_rpc_primitives_debug::block::TransactionTrace>,
 				sp_runtime::DispatchError
 			> {
-			use hedgeware_rpc_primitives_debug::{single, block, CallResult, CreateResult, CreateType};
-			use hedgeware_evm_tracer::CallListTracer;
+			use kabocha_rpc_primitives_debug::{single, block, CallResult, CreateResult, CreateType};
+			use kabocha_evm_tracer::CallListTracer;
 
 			let mut config = <Runtime as pallet_evm::Config>::config().clone();
 			config.estimate = true;
@@ -1385,7 +1395,7 @@ impl_runtime_apis! {
 		}
 	}
 
-	impl hedgeware_rpc_primitives_txpool::TxPoolRuntimeApi<Block> for Runtime {
+	impl kabocha_rpc_primitives_txpool::TxPoolRuntimeApi<Block> for Runtime {
 		fn extrinsic_filter(
 			xts_ready: Vec<<Block as BlockT>::Extrinsic>,
 			xts_future: Vec<<Block as BlockT>::Extrinsic>

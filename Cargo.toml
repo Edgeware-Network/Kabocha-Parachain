@@ -1,12 +1,12 @@
 [package]
-name = "hedgeware-collator"
+name = "kabocha-collator"
 version = "0.1.0"
 authors = ["Parity Technologies <admin@parity.io>"]
 build = "build.rs"
 edition = "2018"
 
 [[bin]]
-name = "hedgeware-collator"
+name = "kabocha-collator"
 path = "src/main.rs"
 
 [dependencies]
@@ -24,8 +24,8 @@ hex-literal = "0.2.1"
 tokio = { version = "0.2.13", features = ["macros", "sync"] }
 
 # Parachain dependencies
-hedgeware-parachain-runtime = { package = "parachain-runtime", path = "runtime" }
-hedgeware-parachain-primitives = { path = "primitives" }
+kabocha-parachain-runtime = { package = "parachain-runtime", path = "runtime" }
+kabocha-parachain-primitives = { path = "primitives" }
 
 # Substrate dependencies
 sp-runtime = { git = "https://github.com/paritytech/substrate", default-features = false, branch = "polkadot-v0.9.4" }
@@ -84,13 +84,13 @@ polkadot-service = { git = "https://github.com/paritytech/polkadot", branch = "r
 polkadot-cli = { git = "https://github.com/paritytech/polkadot", branch = "release-v0.9.4" }
 polkadot-parachain = { git = "https://github.com/paritytech/polkadot", branch = "release-v0.9.4" }
 
-# Hedgeware
-cli_opt = { package = "hedgeware-cli-opt", path = "./cli-opt" }
-hedgeware-rpc-txpool = { path = "./client/rpc/txpool" }
-hedgeware-rpc-primitives-txpool = { path = "./rpc-primitives/txpool" }
-hedgeware-rpc-debug = { path = "./client/rpc/debug" }
-hedgeware-rpc-primitives-debug = { path = "./rpc-primitives/debug" }
-hedgeware-rpc-trace = { path = "./client/rpc/trace" }
+# Kabocha
+cli_opt = { package = "kabocha-cli-opt", path = "./cli-opt" }
+kabocha-rpc-txpool = { path = "./client/rpc/txpool" }
+kabocha-rpc-primitives-txpool = { path = "./rpc-primitives/txpool" }
+kabocha-rpc-debug = { path = "./client/rpc/debug" }
+kabocha-rpc-primitives-debug = { path = "./rpc-primitives/debug" }
+kabocha-rpc-trace = { path = "./client/rpc/trace" }
 
 # Frontier
 ethereum = { package = "pallet-ethereum", git = "https://github.com/webb-tools/frontier", branch = "polkadot-v0.9.4" }

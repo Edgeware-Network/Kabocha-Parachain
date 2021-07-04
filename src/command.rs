@@ -48,8 +48,8 @@ fn load_spec(
 			&include_bytes!("../res/track.json")[..],
 		)?)),
 		"" | "local"=> Ok(Box::new(chain_spec::get_chain_spec(para_id))),
-		"hedgeware-rococo" => Ok(Box::new(chain_spec::hedgeware_rococo_testnet())),
-		"hedgeware-config" => Ok(Box::new(chain_spec::hedgeware(para_id))),
+		"kabocha-rococo" => Ok(Box::new(chain_spec::kabocha_rococo_testnet())),
+		"kabocha-config" => Ok(Box::new(chain_spec::kabocha(para_id))),
 		path => Ok({
 			let chain_spec = chain_spec::ChainSpec::from_json_file(
 			path.into(),
@@ -61,7 +61,7 @@ fn load_spec(
 
 impl SubstrateCli for Cli {
 	fn impl_name() -> String {
-		"Hedgeware collator".into()
+		"Kabocha collator".into()
 	}
 
 	fn impl_version() -> String {
@@ -70,7 +70,7 @@ impl SubstrateCli for Cli {
 
 	fn description() -> String {
 		format!(
-			"Hedgeware collator\n\nThe command-line arguments provided first will be \
+			"Kabocha collator\n\nThe command-line arguments provided first will be \
 		passed to the parachain node, while the arguments provided after -- will be passed \
 		to the relaychain node.\n\n\
 		{} [parachain-args] -- [relaychain-args]",
@@ -95,13 +95,13 @@ impl SubstrateCli for Cli {
 	}
 
 	fn native_runtime_version(_chain_spec: &Box<dyn ChainSpec>) -> &'static RuntimeVersion {
-		&hedgeware_parachain_runtime::VERSION
+		&kabocha_parachain_runtime::VERSION
 	}
 }
 
 impl SubstrateCli for RelayChainCli {
 	fn impl_name() -> String {
-		"Hedgeware collator".into()
+		"Kabocha collator".into()
 	}
 
 	fn impl_version() -> String {
@@ -110,7 +110,7 @@ impl SubstrateCli for RelayChainCli {
 
 	fn description() -> String {
 		format!(
-			"Hedgeware collator\n\nThe command-line arguments provided first will be \
+			"Kabocha collator\n\nThe command-line arguments provided first will be \
 		passed to the parachain node, while the arguments provided after -- will be passed \
 		to the relaychain node.\n\n\
 		{} [parachain-args] -- [relaychain-args]",
@@ -149,19 +149,19 @@ fn extract_genesis_wasm(chain_spec: &Box<dyn sc_service::ChainSpec>) -> Result<V
 		.ok_or_else(|| "Could not find wasm file in genesis state!".into())
 }
 
-use crate::service::{new_partial, HedgewareParachainRuntimeExecutor};
+use crate::service::{new_partial, KabochaParachainRuntimeExecutor};
 
 macro_rules! construct_async_run {
 	(|$components:ident, $cli:ident, $cmd:ident, $config:ident| $( $code:tt )* ) => {{
 		let runner = $cli.create_runner($cmd)?;
 		runner.async_run(|$config| {
 			let $components = new_partial::<
-				hedgeware_parachain_runtime::RuntimeApi,
-				HedgewareParachainRuntimeExecutor,
+				kabocha_parachain_runtime::RuntimeApi,
+				KabochaParachainRuntimeExecutor,
 				_
 			>(
 				&$config,
-				crate::service::hedgeware_parachain_build_import_queue,
+				crate::service::kabocha_parachain_build_import_queue,
 			)?;
 			let task_manager = $components.task_manager;
 			{ $( $code )* }.map(|v| (v, task_manager))
@@ -315,7 +315,7 @@ pub fn run() -> Result<()> {
 					}
 				);
 
-				crate::service::start_hedgeware_parachain_node(config, polkadot_config, id, rpc_config)
+				crate::service::start_kabocha_parachain_node(config, polkadot_config, id, rpc_config)
 					.await
 					.map(|r| r.0)
 					.map_err(Into::into)

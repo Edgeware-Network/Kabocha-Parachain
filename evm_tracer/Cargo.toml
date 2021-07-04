@@ -1,5 +1,5 @@
 [package]
-name = "hedgeware-evm-tracer"
+name = "kabocha-evm-tracer"
 version = '0.1.0'
 authors = ['PureStake']
 edition = '2018'
@@ -17,7 +17,7 @@ sp-core = { git = "https://github.com/paritytech/substrate", branch = "polkadot-
 sp-std = { git = "https://github.com/paritytech/substrate", branch = "polkadot-v0.9.4", default-features = false }
 sp-io = { git = "https://github.com/paritytech/substrate", branch = "polkadot-v0.9.4", default-features = false }
 sp-runtime = { git = "https://github.com/paritytech/substrate", branch = "polkadot-v0.9.4", default-features = false }
-hedgeware-rpc-primitives-debug = { path = "../rpc-primitives/debug", default-features = false }
+kabocha-rpc-primitives-debug = { path = "../rpc-primitives/debug", default-features = false }
 ethereum-types = { version = "0.11.0", default-features = false }
 
 [features]
@@ -33,5 +33,5 @@ std = [
 	"sp-runtime/std",
 	"ethereum-types/std",
 	"fp-evm/std",
-	"hedgeware-rpc-primitives-debug/std",
+	"kabocha-rpc-primitives-debug/std",
 ]

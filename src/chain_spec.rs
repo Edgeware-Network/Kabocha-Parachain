@@ -17,16 +17,16 @@
 
 use cumulus_primitives_core::ParaId;
 use hex_literal::hex;
-use hedgeware_parachain_runtime::{AuraId};
+use kabocha_parachain_runtime::{AuraId};
 use sc_chain_spec::{ChainSpecExtension, ChainSpecGroup};
 use sc_service::ChainType;
 use serde::{Deserialize, Serialize};
 use sp_core::{sr25519, Pair, Public};
 use sp_runtime::traits::{IdentifyAccount, Verify, One};
-use hedgeware_parachain_primitives::{AccountId, Signature};
+use kabocha_parachain_primitives::{AccountId, Signature};
 
 /// Specialized `ChainSpec` for the normal parachain runtime.
-pub type ChainSpec = sc_service::GenericChainSpec<hedgeware_parachain_runtime::GenesisConfig, Extensions>;
+pub type ChainSpec = sc_service::GenericChainSpec<kabocha_parachain_runtime::GenesisConfig, Extensions>;
 
 /// Helper function to generate a crypto pair from seed
 pub fn get_from_seed<TPublic: Public>(seed: &str) -> <TPublic::Pair as Pair>::Public {
@@ -55,14 +55,14 @@ impl Extensions {
 type AccountPublic = <Signature as Verify>::Signer;
 
 /// Mainnet configuration
-pub fn hedgeware_rococo_testnet() -> ChainSpec {
-	match ChainSpec::from_json_bytes(&include_bytes!("../res/hedgeware.chainspec.json")[..]) {
+pub fn kabocha_rococo_testnet() -> ChainSpec {
+	match ChainSpec::from_json_bytes(&include_bytes!("../res/kabocha.chainspec.json")[..]) {
 		Ok(spec) => spec,
 		Err(e) => panic!("{}", e),
 	}
 }
 
-pub fn hedgeware(id: ParaId) -> ChainSpec {
+pub fn kabocha(id: ParaId) -> ChainSpec {
 	let data = r#"
 		{
 			"ss58Format": 777,
@@ -71,8 +71,8 @@ pub fn hedgeware(id: ParaId) -> ChainSpec {
 		}"#;
 	let properties = serde_json::from_str(data).unwrap();
 	ChainSpec::from_genesis(
-		"Hedgeware",
-		"hedgeware",
+		"Kabocha",
+		"kabocha",
 		ChainType::Live,
 		move || {
 			testnet_genesis(
@@ -144,31 +144,31 @@ fn testnet_genesis(
 	initial_authorities: Vec<AuraId>,
 	id: ParaId,
 	dev_accounts: bool,
-) -> hedgeware_parachain_runtime::GenesisConfig {
+) -> kabocha_parachain_runtime::GenesisConfig {
 	let balances = quaddrop::parse_allocation(
 		"quaddrop/allocation/dump.json".to_string(),
 		dev_accounts
 	).unwrap().balances;
 
-	hedgeware_parachain_runtime::GenesisConfig {
-		frame_system: hedgeware_parachain_runtime::SystemConfig {
-			code: hedgeware_parachain_runtime::WASM_BINARY
+	kabocha_parachain_runtime::GenesisConfig {
+		frame_system: kabocha_parachain_runtime::SystemConfig {
+			code: kabocha_parachain_runtime::WASM_BINARY
 				.expect("WASM binary was not build, please build it!")
 				.to_vec(),
 			changes_trie_config: Default::default(),
 		},
-		pallet_aura: hedgeware_parachain_runtime::AuraConfig {
+		pallet_aura: kabocha_parachain_runtime::AuraConfig {
 			authorities: initial_authorities,
 		},
-		pallet_balances: hedgeware_parachain_runtime::BalancesConfig {
+		pallet_balances: kabocha_parachain_runtime::BalancesConfig {
 			balances: balances.clone(),
 		},
-		pallet_democracy: hedgeware_parachain_runtime::DemocracyConfig::default(),
-		pallet_collective_Instance1: hedgeware_parachain_runtime::CouncilConfig::default(),
+		pallet_democringey: kabocha_parachain_runtime::DemocracyConfig::default(),
+		pallet_collective_Instance1: kabocha_parachain_runtime::CouncilConfig::default(),
 		pallet_treasury: Default::default(),
 		pallet_elections_phragmen: Default::default(),
-		pallet_vesting: hedgeware_parachain_runtime::VestingConfig::default(),
-		treasury_reward: hedgeware_parachain_runtime::TreasuryRewardConfig{
+		pallet_vesting: kabocha_parachain_runtime::VestingConfig::default(),
+		treasury_reward: kabocha_parachain_runtime::TreasuryRewardConfig{
 			current_payout: Default::default(),
 				minting_interval: One::one(),
 			recipients: Default::default(),
@@ -176,8 +176,8 @@ fn testnet_genesis(
 		},
 		pallet_evm: Default::default(),
 		pallet_ethereum: Default::default(),
-		pallet_sudo: hedgeware_parachain_runtime::SudoConfig { key: root_key },
-		parachain_info: hedgeware_parachain_runtime::ParachainInfoConfig { parachain_id: id },
+		pallet_sudo: kabocha_parachain_runtime::SudoConfig { key: root_key },
+		parachain_info: kabocha_parachain_runtime::ParachainInfoConfig { parachain_id: id },
 		cumulus_pallet_aura_ext: Default::default(),
 		cumulus_pallet_parachain_system: Default::default(),
 	}
