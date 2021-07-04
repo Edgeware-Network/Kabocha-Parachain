@@ -1,5 +1,5 @@
  [package]
-name = 'hedgeware-cli-opt'
+name = 'kabocha-cli-opt'
 homepage = 'https://moonbeam.network'
 license = 'GPL-3.0-only'
 version = '0.8.0-dev'

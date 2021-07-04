@@ -9,12 +9,13 @@ serde = { version = "1.0.101", optional = true, features = ["derive"] }
 codec = { package = "parity-scale-codec", version = "2.0.0", default-features = false, features = ["derive"] }
 log = { version = "0.4.14", default-features = false }
 
-# Hedgeware modules
+# Kabocha modules
+pallet-democringey = { package = "pallet-democringey", path = "../pallets/democringey", default-features = false }
 treasury-reward = { path = "../pallets/treasury-reward", default-features = false }
 parachain-info = { path = "../pallets/parachain-info", default-features = false }
 
-# Hedgeware primitives
-hedgeware-parachain-primitives = { path = "../primitives", default-features = false }
+# Kabocha primitives
+kabocha-parachain-primitives = { path = "../primitives", default-features = false }
 
 # Substrate dependencies
 sp-std = { git = "https://github.com/paritytech/substrate", default-features = false, branch = "polkadot-v0.9.4" }
@@ -41,7 +42,6 @@ pallet-collective = { git = "https://github.com/paritytech/substrate", default-f
 pallet-contracts = { git = "https://github.com/paritytech/substrate", default-features = false, branch = "polkadot-v0.9.4" }
 pallet-contracts-primitives = { git = "https://github.com/paritytech/substrate", default-features = false, branch = "polkadot-v0.9.4" }
 pallet-contracts-rpc-runtime-api = { git = "https://github.com/paritytech/substrate", default-features = false, branch = "polkadot-v0.9.4" }
-pallet-democracy = { git = "https://github.com/paritytech/substrate", default-features = false, branch = "polkadot-v0.9.4" }
 pallet-elections-phragmen = { git = "https://github.com/paritytech/substrate", default-features = false, branch = "polkadot-v0.9.4" }
 pallet-identity = { git = "https://github.com/paritytech/substrate", default-features = false, branch = "polkadot-v0.9.4" }
 pallet-multisig = { git = "https://github.com/paritytech/substrate", default-features = false, branch = "polkadot-v0.9.4" }
@@ -64,10 +64,10 @@ webb-currencies = { default-features = false, git = "https://github.com/webb-too
 webb-tokens = { default-features = false, git = "https://github.com/webb-tools/anon", branch = "polkadot-v0.9.4" }
 webb-traits = { default-features = false, git = "https://github.com/webb-tools/anon", branch = "polkadot-v0.9.4" }
 
-# Hedgeware
-hedgeware-evm-tracer = { path = "../evm_tracer", default-features = false }
-hedgeware-rpc-primitives-debug = { path = "../rpc-primitives/debug", default-features = false }
-hedgeware-rpc-primitives-txpool = { path = "../rpc-primitives/txpool", default-features = false }
+# Kabocha
+kabocha-evm-tracer = { path = "../evm_tracer", default-features = false }
+kabocha-rpc-primitives-debug = { path = "../rpc-primitives/debug", default-features = false }
+kabocha-rpc-primitives-txpool = { path = "../rpc-primitives/txpool", default-features = false }
 
 # Cumulus dependencies
 cumulus-pallet-aura-ext = { git = "https://github.com/paritytech/cumulus", branch = "polkadot-v0.9.4", default-features = false }
@@ -131,7 +131,6 @@ std = [
 	"pallet-contracts/std",
 	"pallet-contracts-primitives/std",
 	"pallet-contracts-rpc-runtime-api/std",
-	"pallet-democracy/std",
 	"pallet-elections-phragmen/std",
 	"pallet-identity/std",
 	"pallet-multisig/std",
@@ -146,7 +145,7 @@ std = [
 	"pallet-treasury/std",
 	"pallet-utility/std",
 	"pallet-vesting/std",
-	"hedgeware-parachain-primitives/std",
+	"kabocha-parachain-primitives/std",
 	"cumulus-pallet-aura-ext/std",
 	"cumulus-pallet-dmp-queue/std",
 	"cumulus-pallet-parachain-system/std",
@@ -161,5 +160,6 @@ std = [
 	"pallet-aura/std",
 	"sp-consensus-aura/std",
 	"parachain-info/std",
+	"pallet-democringey/std",
 	"treasury-reward/std",
 ]

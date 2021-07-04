@@ -55,9 +55,9 @@ type FullBackend = TFullBackend<Block>;
 
 // Native executor instance.
 native_executor_instance!(
-	pub HedgewareParachainRuntimeExecutor,
-	hedgeware_parachain_runtime::api::dispatch,
-	hedgeware_parachain_runtime::native_version,
+	pub KabochaParachainRuntimeExecutor,
+	kabocha_parachain_runtime::api::dispatch,
+	kabocha_parachain_runtime::native_version,
 );
 
 pub fn frontier_database_dir(config: &Configuration) -> std::path::PathBuf {
@@ -66,7 +66,7 @@ pub fn frontier_database_dir(config: &Configuration) -> std::path::PathBuf {
 		.as_ref()
 		.map(|base_path| base_path.config_dir(config.chain_spec.id()))
 		.unwrap_or_else(|| {
-			BasePath::from_project("", "", "hedgeware").config_dir(config.chain_spec.id())
+			BasePath::from_project("", "", "kabocha").config_dir(config.chain_spec.id())
 		});
 	config_dir.join("frontier").join("db")
 }
@@ -424,15 +424,15 @@ where
 }
 
 /// Build the import queue for the rococo parachain runtime.
-pub fn hedgeware_parachain_build_import_queue(
-	client: Arc<TFullClient<Block, hedgeware_parachain_runtime::RuntimeApi, HedgewareParachainRuntimeExecutor>>,
+pub fn kabocha_parachain_build_import_queue(
+	client: Arc<TFullClient<Block, kabocha_parachain_runtime::RuntimeApi, KabochaParachainRuntimeExecutor>>,
 	config: &Configuration,
 	telemetry: Option<TelemetryHandle>,
 	task_manager: &TaskManager,
 ) -> Result<
 	sp_consensus::DefaultImportQueue<
 		Block,
-		TFullClient<Block, hedgeware_parachain_runtime::RuntimeApi, HedgewareParachainRuntimeExecutor>,
+		TFullClient<Block, kabocha_parachain_runtime::RuntimeApi, KabochaParachainRuntimeExecutor>,
 	>,
 	sc_service::Error,
 > {
@@ -469,21 +469,21 @@ pub fn hedgeware_parachain_build_import_queue(
 }
 
 /// Start a rococo parachain node.
-pub async fn start_hedgeware_parachain_node(
+pub async fn start_kabocha_parachain_node(
 	parachain_config: Configuration,
 	polkadot_config: Configuration,
 	id: ParaId,
 	rpc_config: cli_opt::RpcConfig,
 ) -> sc_service::error::Result<
-	(TaskManager, Arc<TFullClient<Block, hedgeware_parachain_runtime::RuntimeApi, HedgewareParachainRuntimeExecutor>>)
+	(TaskManager, Arc<TFullClient<Block, kabocha_parachain_runtime::RuntimeApi, KabochaParachainRuntimeExecutor>>)
 > {
-	start_node_impl::<hedgeware_parachain_runtime::RuntimeApi, HedgewareParachainRuntimeExecutor, _, _, _>(
+	start_node_impl::<kabocha_parachain_runtime::RuntimeApi, KabochaParachainRuntimeExecutor, _, _, _>(
 		parachain_config,
 		polkadot_config,
 		id,
 		rpc_config,
 		|_| Default::default(),
-		hedgeware_parachain_build_import_queue,
+		kabocha_parachain_build_import_queue,
 		|client,
 		 prometheus_registry,
 		 telemetry,

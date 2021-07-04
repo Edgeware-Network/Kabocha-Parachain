@@ -1,6 +1,6 @@
 use hex_literal::*;
-use hedgeware_parachain_primitives::AccountId;
-use hedgeware_parachain_primitives::Balance;
+use kabocha_parachain_primitives::AccountId;
+use kabocha_parachain_primitives::Balance;
 
 /// Split endowment amount for founders
 pub const ENDOWMENT: Balance = 50_000_000_000_000_000_000_000;

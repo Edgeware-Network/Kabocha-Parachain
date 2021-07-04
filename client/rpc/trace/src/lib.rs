@@ -52,10 +52,10 @@ use ethereum_types::H256;
 use fc_rpc::internal_err;
 use fp_rpc::EthereumRuntimeRPCApi;
 
-pub use hedgeware_rpc_core_trace::{
+pub use kabocha_rpc_core_trace::{
 	FilterRequest, RequestBlockId, RequestBlockTag, Trace as TraceT, TraceServer, TransactionTrace,
 };
-use hedgeware_rpc_primitives_debug::{block, DebugRuntimeApi};
+use kabocha_rpc_primitives_debug::{block, DebugRuntimeApi};
 
 /// RPC handler. Will communicate with a `CacheTask` through a `CacheRequester`.
 pub struct Trace<B, C> {

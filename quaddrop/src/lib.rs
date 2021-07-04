@@ -4,7 +4,7 @@ use std::fs::File;
 use std::io::Read;
 use std::path::Path;
 use serde::{Serialize, Deserialize};
-use hedgeware_parachain_primitives::*;
+use kabocha_parachain_primitives::*;
 use sp_core::{sr25519, Pair, Public};
 use sp_runtime::traits::{IdentifyAccount, Verify};
 

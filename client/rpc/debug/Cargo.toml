@@ -1,5 +1,5 @@
 [package]
-name = "hedgeware-rpc-debug"
+name = "kabocha-rpc-debug"
 version = '0.1.0'
 authors = ['PureStake']
 edition = '2018'
@@ -23,8 +23,8 @@ sp-block-builder = { git = "https://github.com/paritytech/substrate", branch = "
 sp-runtime = { git = "https://github.com/paritytech/substrate", branch = "polkadot-v0.9.4" }
 sp-utils = { git = "https://github.com/paritytech/substrate", branch = "polkadot-v0.9.4" }
 
-hedgeware-rpc-core-debug = { path = "../../rpc-core/debug" }
-hedgeware-rpc-primitives-debug = { path = "../../../rpc-primitives/debug" }
+kabocha-rpc-core-debug = { path = "../../rpc-core/debug" }
+kabocha-rpc-primitives-debug = { path = "../../../rpc-primitives/debug" }
 fc-consensus = { git = "https://github.com/webb-tools/frontier", branch = "polkadot-v0.9.4" }
 fc-db = { git = "https://github.com/webb-tools/frontier", branch = "polkadot-v0.9.4" }
 fc-rpc = { git = "https://github.com/webb-tools/frontier", branch = "polkadot-v0.9.4" }
