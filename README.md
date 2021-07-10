@@ -6,11 +6,11 @@ This is a template repo originally developed by Drew Stone, along with Webb memb
 
 
 # Contributing
-The parachain repos are coordinated around branches such as `polkadot-v0.9.X` on the Substrate & Cumulus and `release-v0.9.X` on the Polkadot repos respectively. It is good practice that we follow that here, while using `main` to represent the best, currently working version of the node against the most up-to-date upstream versions. Currently, we have our latest work on `polkadot-v0.9.7` and related branches.
+The parachain repos are coordinated around branches such as `polkadot-v0.9.X` on the Substrate & Cumulus and `release-v0.9.X` on the Polkadot repos respectively. It is good practice that we follow that here, while using `main` to represent the best, currently working version of the node against the most up-to-date upstream versions. Currently, we have our latest work on `polkadot-v0.9.8` and related branches.
 
 ## Updating versions
 In order to update to something like `polkadot-v0.9.8` and `releaes-v0.9.8` the process is quite simple barring any upstream changes.
-1. Convert all references to `v0.9.7` to `v0.9.8`.
+1. Convert all references to `v0.9.8` to `v0.9.8`.
 2. Run cargo update.
 3. Build the node and fix any errors.
 4. Use the `cumlulus/polkadot-parachains` repo as a starting point to address discrepencies / errors.
@@ -18,15 +18,15 @@ In order to update to something like `polkadot-v0.9.8` and `releaes-v0.9.8` the 
 ## Dealing with Frontier
 One of the first errors you will encounter is Frontier. We aim to cover this topic below.
 
-Frontier EVM and its relevant RPCs are still quite far behind in Substrate. They are currently pegged to a branch called `frontier` that last saw an update in March. Therefore, any parachain node needs to use a fork of this and update that Frontier repo to the respective `0.9.X`. Today, we are using the fork in @webb-tools. It has some features also not merged into Frontier, mainly updating the `dynamic-fee-pallet` to the Substrate 3.0 macro structure. This causes noticeable changes to the service file of this node and should be dealt with with care. Any fork can suffice.
-1. Create a fork of Frontier or use [@webb-tools/frontier](https://github.com/webb-tools/frontier) as a starting point.
+Frontier EVM and its relevant RPCs are still quite far behind in Substrate. They are currently pegged to a branch called `frontier` that last saw an update in March. Therefore, any parachain node needs to use a fork of this and update that Frontier repo to the respective `0.9.X`. Today, we are using the fork in @edgeware-network. It has some features also not merged into Frontier, mainly updating the `dynamic-fee-pallet` to the Substrate 3.0 macro structure. This causes noticeable changes to the service file of this node and should be dealt with with care. Any fork can suffice.
+1. Create a fork of Frontier or use [@edgeware-network/frontier](https://github.com/edgeware-network/frontier) as a starting point.
 2. Update the references to the relevant `polkadot-v0.9.X` of Substrate (note here we only need to update Substrate branches).
 3. Push the fork.
 4. Update the Hedgeware Frontier dependencies to the right fork.
 5. Rebuild and fix errors as they arise.
 
 # Build & generate the local parachain specs
-Ensure you have all relevant dependencies for building the repo. The latest work so far is pegged to `polkadot-v0.9.7` and `release-v0.9.7` branches of Substrate, Cumulus, and Polkadot respectively.
+Ensure you have all relevant dependencies for building the repo. The latest work so far is pegged to `polkadot-v0.9.8` and `release-v0.9.8` branches of Substrate, Cumulus, and Polkadot respectively.
 ```
 cargo build --release
 
@@ -60,7 +60,7 @@ To run against your local chainspec:
 # Compile Polkadot with the real overseer feature
 git clone https://github.com/paritytech/polkadot
 git fetch
-git checkout release-v0.9.7
+git checkout release-v0.9.8
 cargo build --release
 
 # generate the relay chain spec
