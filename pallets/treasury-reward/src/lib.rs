@@ -8,6 +8,7 @@ use sp_runtime::traits::{Saturating, Zero};
 use sp_runtime::{Percent, RuntimeDebug};
 
 use frame_support::{traits::{Currency, Get}, PalletId};
+use frame_system::{Pallet, Event, Config};
 
 #[derive(Encode, Decode, Clone, Eq, PartialEq, Ord, PartialOrd, RuntimeDebug)]
 pub struct RecipientAllocation {
@@ -225,7 +226,7 @@ pub mod pallet {
 		/// If there is no leftover allocation, the other recipients'
 		/// reward percentages will be diluted.
 		#[pallet::weight(5_000_000)]
-		pub(super) fn add(origin: OriginFor<T>, recipient: T::AccountId, pct: Percent) -> DispatchResult {
+		pub fn add(origin: OriginFor<T>, recipient: T::AccountId, pct: Percent) -> DispatchResult {
 			ensure_root(origin)?;
 			ensure!(pct.deconstruct() <= T::MaximumRecipientPct::get().deconstruct(), "Invalid proposed percentage. Too large.");
 			ensure!(!Self::recipients().contains(&recipient), "Duplicate recipients not allowed");
@@ -253,7 +254,7 @@ pub mod pallet {
 		/// Dilution should only occur up until the proposed percentages each
 		/// active participant was added to the set with.
 		#[pallet::weight(5_000_000)]
-		pub(super) fn remove(origin: OriginFor<T>, recipient: T::AccountId) -> DispatchResult {
+		pub fn remove(origin: OriginFor<T>, recipient: T::AccountId) -> DispatchResult {
 			ensure_root(origin)?;
 			ensure!(Self::recipients().contains(&recipient), "Recipient doesn't exist");
 			// Get removed recipient percentrage and calculate augmented percentages.
@@ -270,7 +271,7 @@ pub mod pallet {
 		/// them into the set. This will cause a dilution and inflation of the
 		/// set and does lose precision in the process.
 		#[pallet::weight(5_000_000)]
-		pub(super) fn update(origin: OriginFor<T>, recipient: T::AccountId, pct: Percent) -> DispatchResult {
+		pub fn update(origin: OriginFor<T>, recipient: T::AccountId, pct: Percent) -> DispatchResult {
 			ensure_root(origin.clone())?;
 			ensure!(pct.deconstruct() <= T::MaximumRecipientPct::get().deconstruct(), "Invalid proposed percentage. Too large.");
 			Self::remove(origin.clone(), recipient.clone()).map_err(|_| Error::<T>::FailedToRemove)?;
@@ -281,7 +282,7 @@ pub mod pallet {
 
 		/// Updates the minting interval of the treasury reward process
 		#[pallet::weight(5_000_000)]
-		pub(super) fn set_minting_interval(origin: OriginFor<T>, interval: T::BlockNumber) -> DispatchResult {
+		pub fn set_minting_interval(origin: OriginFor<T>, interval: T::BlockNumber) -> DispatchResult {
 			ensure_root(origin)?;
 			<MintingInterval<T>>::put(interval);
 			Self::deposit_event(Event::MintingIntervalUpdate(interval));
@@ -290,7 +291,7 @@ pub mod pallet {
 
 		/// Updates the current payout of the treasury reward process
 		#[pallet::weight(5_000_000)]
-		pub(super) fn set_current_payout(origin: OriginFor<T>, amount: BalanceOf<T>) -> DispatchResult {
+		pub fn set_current_payout(origin: OriginFor<T>, amount: BalanceOf<T>) -> DispatchResult {
 			ensure_root(origin)?;
 			<CurrentPayout<T>>::put(amount);
 			Self::deposit_event(Event::RewardPayoutUpdate(amount));
